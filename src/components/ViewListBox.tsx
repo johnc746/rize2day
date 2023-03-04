@@ -1,0 +1,87 @@
+import React, { FC } from "react";
+import { Fragment, useState } from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon } from "@heroicons/react/solid";
+import ButtonDropdown from "./ButtonDropdown";
+
+export enum VIEW_MODE {
+  PUBLIC = 0,
+  PRIVATE = 1,
+  FRIEND = 2
+}
+
+export interface ViewListBoxProps {
+  className?: string;
+  onSelected: (v: any) => void;
+}
+
+const lists = [
+  { name: "Public View", code: VIEW_MODE.PUBLIC },
+  { name: "Private View", code: VIEW_MODE.PRIVATE },
+  { name: "Friend View", code: VIEW_MODE.FRIEND }
+];
+
+const ViewListBox: FC<ViewListBoxProps> = ({
+  className = "",
+  onSelected
+}) => {
+  const [selected, setSelected] = useState(lists[0]);
+
+  const handleSelect = (v: any) => {
+    setSelected(v);
+    onSelected(v);
+  }
+  return (
+    <div
+      className={`nc-ViewListBox ${className}`}
+      data-nc-id="ViewListBox"
+    >
+      <Listbox value={selected} onChange={handleSelect}>
+        <div className="relative md:min-w-[200px]">
+          <Listbox.Button as={"div"}>
+            <ButtonDropdown>{selected.name}</ButtonDropdown>
+          </Listbox.Button>
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute right-0 z-20 w-52 py-1 mt-2 overflow-auto text-sm text-neutral-900 dark:text-neutral-200 bg-white rounded-2xl shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-neutral-900 dark:ring-neutral-700">
+              {lists.map((item, index: number) => (
+                <Listbox.Option
+                  key={index}
+                  className={({ active }) =>
+                    `${active
+                      ? "text-primary-700 dark:text-neutral-200 bg-primary-50 dark:bg-neutral-700"
+                      : ""
+                    } cursor-default select-none relative py-2 pl-10 pr-4`
+                  }
+                  value={item}
+                >
+                  {({ selected }) => (
+                    <>
+                      <span
+                        className={`${selected ? "font-medium" : "font-normal"
+                          } block truncate`}
+                      >
+                        {item.name}
+                      </span>
+                      {selected ? (
+                        <span className="text-primary-700 absolute inset-y-0 left-0 flex items-center pl-3 dark:text-neutral-200">
+                          <CheckIcon className="w-5 h-5" aria-hidden="true" />
+                        </span>
+                      ) : null}
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
+        </div>
+      </Listbox>
+    </div>
+  );
+};
+
+export default ViewListBox;
