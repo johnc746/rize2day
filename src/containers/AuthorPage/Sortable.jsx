@@ -43,7 +43,7 @@ const SortableExplorer = ({ view, effect, data }) => {
   const [items, setItems] = useState([]);
   useEffect(() => {
     if (data.length > 0) {
-      setItems(data);
+      setItems(data)
     }
   }, [data]);
 

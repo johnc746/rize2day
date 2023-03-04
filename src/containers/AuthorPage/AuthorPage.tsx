@@ -227,9 +227,9 @@ const AuthorPage: FC<AuthorPageProps> = ({ className = "" }) => {
     }
     else {
       setUrl(`${config.API_URL}api/item/get_others_nfts`);
-      setPData({ fromId: currentUsr._id, toId: userId, viewMode: currentUsr.view_mode });
+      setPData({ fromId: currentUsr._id, toId: userId});
       axios.post(`${config.API_URL}api/item/get_others_nfts`,
-        { fromId: currentUsr._id, toId: userId, viewMode: currentUsr.view_mode }, {
+        { fromId: currentUsr._id, toId: userId}, {
         headers:
         {
           "x-access-token": localStorage.getItem("jwtToken")
@@ -504,7 +504,7 @@ const AuthorPage: FC<AuthorPageProps> = ({ className = "" }) => {
                           <iframe className="w-full h-[500px] mt-3" src={`http://68.178.206.38:3002?url=${url}&param=${JSON.stringify(pdata)}&upload=${config.API_URL}uploads/`} />
                         ) :
                         effect3D === NFT_EFFECT.DRAG_VIEW ? (
-                            <SortableExplorer view={4} data={createdItems} effect={effect} />
+                            <SortableExplorer view={4} data={activeIndex === 1 ? collectedItems : activeIndex === 2 ?createdItems : activeIndex === 3 ? likedItems : []} effect={effect} />
                         )
                           :
                           activeIndex === 1 ? (
